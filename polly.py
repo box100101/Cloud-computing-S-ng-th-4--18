@@ -58,7 +58,10 @@ def checkLang(choosen):
 def playSrc():
     langCode,temp,voiceId = checkLang(choosen)
     text = textInput.get("1.0", "end")
-    response = polly.synthesize_speech( LanguageCode=langCode , Text=text, VoiceId=voiceId, OutputFormat='mp3')
+    f = open("Lexicon.pls", "r")
+    lexiconData = f.read()
+    polly.put_lexicon(Name='lexicon',Content=lexiconData)
+    response = polly.synthesize_speech(LexiconNames=["lexicon"], LanguageCode=langCode , Text=text, VoiceId='Joanna', OutputFormat='mp3')
     body = response['AudioStream'].read()
     letters = string.ascii_lowercase
     file_name= ( ''.join(random.choice(letters) for i in range(10))+".mp3" )
@@ -67,7 +70,8 @@ def playSrc():
         file.close()
     playsound(file_name)
     os.remove(file_name)
-        
+
+
 def playTar():
     langCode,temp,voiceId = checkLang(choosenTar)
     text = textOutput.get("1.0", "end")
@@ -137,6 +141,5 @@ textOutput.pack()
 
 btnTar = tk.Button(root, height=1, width=10, text="Read it!", command=playTar)
 btnTar.pack()
-
 
 root.mainloop()
